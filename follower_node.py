@@ -23,8 +23,6 @@ class FollowerNode:
         self.leader_pose = None
         self.follower_pose = None
 
-        self.sequence_id = 1
-
         self.move = FollowController()
 
         self.participant = DomainParticipant(DOMAIN_ID)
@@ -62,12 +60,6 @@ class FollowerNode:
             self.follower_move_topic
         )
 
-        print(f"FollowerNode started: {self.follower_name} follows {self.leader_name}")
-        print(f"Read leader pose:   {self.leader_name}_TrianglePose")
-        print(f"Read follower pose: {self.follower_name}_TrianglePose")
-        print(f"Publish move:       {self.follower_name}_TriangleMove")
-        print()
-
     def read_latest_pose(self, reader):
         messages = reader.take(N=20)
 
@@ -88,7 +80,6 @@ class FollowerNode:
 
     def publish_move(self, delta_lin: float, delta_theta: float):
         move_msg = TriangleMove(
-            sequence_id=self.sequence_id,
             name=self.follower_name,
             delta_lin=delta_lin,
             delta_theta=delta_theta,
@@ -96,7 +87,6 @@ class FollowerNode:
         )
 
         self.move_writer.write(move_msg)
-        self.sequence_id += 1
 
     def update(self):
         self.read_poses()

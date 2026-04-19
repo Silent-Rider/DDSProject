@@ -67,8 +67,6 @@ def main():
         move_topic
     )
 
-    sequence_id = 1
-
     while True:
         key = get_single_key()
 
@@ -83,7 +81,6 @@ def main():
         delta_lin, delta_theta = key_to_move(key)
 
         move = TriangleMove(
-            sequence_id=sequence_id,
             name=triangle_name,
             delta_lin=delta_lin,
             delta_theta=delta_theta,
@@ -91,7 +88,6 @@ def main():
         )
 
         move_publisher.write(move)
-        sequence_id += 1
 
 
 if __name__ == "__main__":

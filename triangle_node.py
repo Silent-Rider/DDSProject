@@ -26,9 +26,6 @@ class TriangleNode:
         self.y = y
         self.theta = 0.0
 
-        self.sequence_id = 1
-        # self.running = True
-
         self.participant = DomainParticipant(DOMAIN_ID)
 
         self.pose_topic_name = f"{self.name}_TrianglePose"
@@ -78,7 +75,6 @@ class TriangleNode:
 
     def create_pose_message(self) -> TrianglePose:
         return TrianglePose(
-            sequence_id=self.sequence_id,
             name=self.name,
             x=self.x,
             y=self.y,
@@ -89,7 +85,6 @@ class TriangleNode:
     def publish_pose(self):
         pose = self.create_pose_message()
         self.pose_publisher.write(pose)
-        self.sequence_id += 1
 
     def apply_move(self, move: TriangleMove):
         self.theta += move.delta_theta

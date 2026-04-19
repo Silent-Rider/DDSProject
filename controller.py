@@ -2,7 +2,7 @@ import math
 
 
 class FollowController:
-    def __init__(self, k_lin=1, k_ang=4.0, stop_distance=1):
+    def __init__(self, k_lin=1, k_ang=4.0, stop_distance=50):
         self.k_lin = k_lin
         self.k_ang = k_ang
         self.stop_distance = stop_distance
