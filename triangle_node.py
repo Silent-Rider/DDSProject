@@ -27,7 +27,7 @@ class TriangleNode:
         self.theta = 0.0
 
         self.sequence_id = 1
-        self.running = True
+        # self.running = True
 
         self.participant = DomainParticipant(DOMAIN_ID)
 
@@ -55,12 +55,6 @@ class TriangleNode:
             self.participant,
             self.move_topic
         )
-
-        print(f"[{self.name}] TriangleNode started")
-        print(f"[{self.name}] initial: x={self.x}, y={self.y}, theta={self.theta}")
-        print(f"[{self.name}] subscribe: {self.move_topic_name}")
-        print(f"[{self.name}] publish:   {self.pose_topic_name}")
-        print()
 
     def normalize_angle(self):
         while self.theta > math.pi:
@@ -98,9 +92,6 @@ class TriangleNode:
         self.sequence_id += 1
 
     def apply_move(self, move: TriangleMove):
-        if move.name != self.name:
-            return
-
         self.theta += move.delta_theta
         self.normalize_angle()
 
@@ -122,18 +113,14 @@ class TriangleNode:
     def run(self):
         self.publish_pose()
 
-        while self.running:
+        while True:
             self.update()
             time.sleep(UPDATE_PERIOD)
 
 
 def read_arguments():
     if len(sys.argv) != 4:
-        print("Usage:")
-        print("  python triangle_node.py <name> <x> <y>")
-        print()
-        print("Example:")
-        print("  python triangle_node.py triangle1 100 300")
+       
         sys.exit(1)
 
     name = sys.argv[1]

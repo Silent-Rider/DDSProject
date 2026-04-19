@@ -15,6 +15,7 @@ WINDOW_HEIGHT = 600
 
 TRIANGLE_COUNT = 10
 UPDATE_PERIOD_MS = 50
+COLORS = ['blue', 'red', 'yellow', 'green', 'orange', 'brown', 'cyan', 'magenta', 'gray', 'black']
 
 
 class TriangleGui:
@@ -37,16 +38,7 @@ class TriangleGui:
             bg="white"
         )
         self.canvas.pack()
-
         self.create_dds_readers()
-
-        print("DDS Triangle GUI started")
-        print("Subscribed topics:")
-
-        for name in self.readers:
-            print(f"  {name}_TrianglePose")
-
-        print()
 
     def create_dds_readers(self):
         for i in range(1, TRIANGLE_COUNT + 1):
@@ -105,11 +97,14 @@ class TriangleGui:
     def draw_triangle(self, pose):
         points = self.get_triangle_points(pose)
         name = pose.name
+        
+        i = int(name[len("triangle"):])
+        color = COLORS[i % len(COLORS)]
 
         if name not in self.triangle_items:
             item_id = self.canvas.create_polygon(
                 points,
-                fill="blue",
+                fill=color,
                 outline="black"
             )
 
@@ -117,29 +112,6 @@ class TriangleGui:
         else:
             item_id = self.triangle_items[name]
             self.canvas.coords(item_id, *points)
-
-        text = (
-            f"{name}\n"
-            f"x={pose.x:.1f}, y={pose.y:.1f}\n"
-            f"theta={math.degrees(pose.theta):.1f}°"
-        )
-
-        text_x = pose.x + 25
-        text_y = WINDOW_HEIGHT - pose.y - 25
-
-        if name not in self.text_items:
-            text_id = self.canvas.create_text(
-                text_x,
-                text_y,
-                text=text,
-                anchor="w"
-            )
-
-            self.text_items[name] = text_id
-        else:
-            text_id = self.text_items[name]
-            self.canvas.coords(text_id, text_x, text_y)
-            self.canvas.itemconfig(text_id, text=text)
 
     def draw(self):
         self.canvas.delete("grid")

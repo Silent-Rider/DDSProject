@@ -28,7 +28,7 @@ def get_single_key():
 
 
 def key_to_move(key: str):
-    move_step = 20.0
+    move_step = 10.0
     rotate_step = math.radians(15.0)
 
     if key == "w":
@@ -48,11 +48,6 @@ def key_to_move(key: str):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage:")
-        print("  python keyboard_controller.py <triangle_name>")
-        print()
-        print("Example:")
-        print("  python keyboard_controller.py triangle1")
         sys.exit(1)
 
     triangle_name = sys.argv[1]
@@ -71,18 +66,6 @@ def main():
         participant,
         move_topic
     )
-
-    print("DDS keyboard controller started")
-    print(f"Target triangle: {triangle_name}")
-    print(f"Publish topic: {move_topic_name}")
-    print()
-    print("Control:")
-    print("  w - move forward")
-    print("  s - move backward")
-    print("  a - turn left")
-    print("  d - turn right")
-    print("  q - quit")
-    print()
 
     sequence_id = 1
 
@@ -108,14 +91,6 @@ def main():
         )
 
         move_publisher.write(move)
-
-        print(
-            f"sent to {triangle_name}: "
-            f"key={key}, "
-            f"delta_lin={delta_lin:.2f}, "
-            f"delta_theta={math.degrees(delta_theta):.2f} deg"
-        )
-
         sequence_id += 1
 
 

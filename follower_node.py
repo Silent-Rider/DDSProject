@@ -122,11 +122,6 @@ class FollowerNode:
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage:")
-        print("  python follower_node.py <leader_name> <follower_name>")
-        print()
-        print("Example:")
-        print("  python follower_node.py triangle1 triangle2")
         sys.exit(1)
 
     leader_name = sys.argv[1]

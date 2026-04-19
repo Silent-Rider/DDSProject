@@ -3,9 +3,7 @@ import signal
 import subprocess
 import sys
 import time
-
-
-TRIANGLE_COUNT = 10
+import random
 
 
 def start_process(command):
@@ -13,22 +11,24 @@ def start_process(command):
 
 
 def main():
+    triangle_count = 0
+    if len(sys.argv) != 2:
+        sys.exit(1)
+    count_arg = sys.argv[1]
+    try:
+        triangle_count = int(count_arg)
+    except:
+        sys.exit(1)        
+        
     current_dir = os.path.dirname(os.path.abspath(__file__))
     python_executable = sys.executable
 
     processes = []
 
-    print("Starting 10 TriangleNode processes...")
-    print()
-
-    start_x = 100
-    start_y = 300
-    distance = 50
-
-    for i in range(1, TRIANGLE_COUNT + 1):
+    for i in range(1, triangle_count + 1):
         name = f"triangle{i}"
-        x = start_x - (i - 1) * distance
-        y = start_y
+        x = random.randint(100, 700)
+        y = random.randint(100, 500)
 
         command = [
             python_executable,
@@ -41,15 +41,9 @@ def main():
         process = start_process(command)
         processes.append(process)
 
-        print(f"started {name}: x={x}, y={y}")
-
         time.sleep(0.2)
 
-    print()
-    print("Starting follower nodes...")
-    print()
-
-    for i in range(1, TRIANGLE_COUNT):
+    for i in range(1, triangle_count):
         leader_name = f"triangle{i}"
         follower_name = f"triangle{i + 1}"
 
@@ -63,19 +57,7 @@ def main():
         process = start_process(command)
         processes.append(process)
 
-        print(f"started follower: {follower_name} follows {leader_name}")
-
         time.sleep(0.2)
-
-    print()
-    print("Starting keyboard controller for triangle1...")
-    print("Use:")
-    print("  w - move forward")
-    print("  s - move backward")
-    print("  a - turn left")
-    print("  d - turn right")
-    print("  q - quit and stop all processes")
-    print()
 
     keyboard_process = subprocess.Popen([
         python_executable,
@@ -86,20 +68,15 @@ def main():
     try:
         keyboard_process.wait()
     finally:
-        print()
-        print("Stopping all DDS processes...")
-
         for process in processes:
             if process.poll() is None:
                 process.terminate()
-
+                
         time.sleep(1.0)
 
         for process in processes:
             if process.poll() is None:
                 process.kill()
-
-        print("All processes stopped")
 
 
 if __name__ == "__main__":
